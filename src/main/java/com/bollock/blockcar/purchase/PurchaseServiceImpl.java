@@ -3,7 +3,9 @@ package com.bollock.blockcar.purchase;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class PurchaseServiceImpl implements IPurchaseService {
 	@Autowired
 	private PurchaseRepository purchaseRepository;
