@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bollock.blockcar.car.Car;
+import com.bollock.blockcar.car.ICarService;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -22,6 +25,9 @@ import io.swagger.annotations.ApiOperation;
 public class PostController {
 	@Autowired
 	private IPostService postService;
+	
+	@Autowired
+	private ICarService service;
 	
 	@ApiOperation(value = "판매 게시물 등록")
 	@PostMapping("/posts")
@@ -42,6 +48,15 @@ public class PostController {
 	@GetMapping("/posts/{no}")
 	public ResponseEntity<Post> getPost(@PathVariable Long no){
 		Post post = postService.findPost(no);
+		String serial = service.validCheckByCarNumber(post.getCarno());
+		if(serial.equals(null)) return null;
+		Car car = service.findByCarNumber(post.getCarno());
+		car.setAccident(service.getAccidentHistory(serial));
+		car.setMaintenance(service.getMaintenanceHistory(serial));
+		car.setOwner(service.getOwnerHistory(serial));
+		
+		post.setCar(car);
+		
 		return new ResponseEntity<Post>(post,HttpStatus.OK);
 	}
 	
