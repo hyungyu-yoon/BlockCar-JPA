@@ -10,4 +10,6 @@ public interface IUserService {
 	User findUser(Long userno);
 
 	User updateUser(User user);
+
+	User findUserById(String id);
 }

@@ -32,4 +32,9 @@ public class UserServiceImpl implements IUserService {
 		userRepository.flush();
 		return user;
 	}
+
+	@Override
+	public User findUserById(String id) {
+		return userRepository.findById(id);
+	}
 }
