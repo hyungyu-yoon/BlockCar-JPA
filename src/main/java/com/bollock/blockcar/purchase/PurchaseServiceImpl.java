@@ -35,4 +35,9 @@ public class PurchaseServiceImpl implements IPurchaseService {
 		purchaseRepository.flush();
 	}
 
+	@Override
+	public List<Purchase> findUserPurchases(Long no) {
+		return purchaseRepository.findByUserNo(no);
+	}
+
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api")
 @Api(value = "Purchase", description = "Purchase Control")
@@ -25,6 +27,7 @@ public class PurchaseController {
 	
 	@PostMapping("/purchases")
 	public ResponseEntity<Purchase> addPurchase(@RequestBody Purchase purchase){
+		purchase.setState("구매완료");
 		Purchase info = purchaseService.insertPurchase(purchase);
 		return new ResponseEntity<Purchase>(info,HttpStatus.OK);
 	}
