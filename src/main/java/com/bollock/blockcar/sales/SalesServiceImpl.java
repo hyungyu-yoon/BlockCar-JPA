@@ -32,4 +32,9 @@ public class SalesServiceImpl implements ISalesService {
 		return salesRepository.findByUserNo(no);
 	}
 
+	@Override
+	public void updateSales() {
+		salesRepository.flush();
+	}
+
 }
