@@ -23,5 +23,9 @@ public class Auth {
 	public void setCar_no(String car_no) {
 		this.car_no = car_no;
 	}
+	@Override
+	public String toString() {
+		return "Auth [name=" + name + ", phone=" + phone + ", car_no=" + car_no + "]";
+	}
 	
 }

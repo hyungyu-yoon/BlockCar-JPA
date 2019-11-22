@@ -111,7 +111,7 @@ public class FabricRepositoryImpl implements IFabricRepository {
 
 	private Record getRecord(JsonObject rec) {
 		Record record = new Record(rec.getString("carSerialNumber"), rec.getString("carData"), rec.getString("createdAt"), rec.getString("expiredAt"));
-		logger.info("CarSerial : carSerialNumber " + rec.getString("carSerialNumber") +" , carNumber :"+ rec.getString("carNumber") +", createdAt : "+ rec.getString("createdAt") + " expiredAt " + rec.getString("expiredAt"));
+		logger.info("CarSerial : carSerialNumber " + rec.getString("carSerialNumber") +" , carData :"+ rec.getString("carData") +", createdAt : "+ rec.getString("createdAt") + " expiredAt " + rec.getString("expiredAt"));
 		return record;
 	}
 
@@ -161,7 +161,7 @@ public class FabricRepositoryImpl implements IFabricRepository {
 		TransactionProposalRequest tpr = hfClient.newTransactionProposalRequest();
 		tpr.setChaincodeID(id);
 		tpr.setFcn("registerMaintenance");
-		String[] args = { carSerial };
+		String[] args = { carSerial, carData };
 		tpr.setArgs(args);
 		Collection<ProposalResponse> res;
 		try {
@@ -191,13 +191,14 @@ public class FabricRepositoryImpl implements IFabricRepository {
 
 	@Override
 	public boolean registerUpdatedOwner(String carSerial, String carData) {
+		System.out.println("registerOwner : " + carData + " / " + carSerial );
 		if (this.hfClient == null || this.channel == null)
 			loadChannel002();
 		ChaincodeID id = ChaincodeID.newBuilder().setName(chaincode_Name).build();
 		TransactionProposalRequest tpr = hfClient.newTransactionProposalRequest();
 		tpr.setChaincodeID(id);
 		tpr.setFcn("RegisterUpdatedOwner");
-		String[] args = { carSerial };
+		String[] args = { carSerial, carData };
 		tpr.setArgs(args);
 		Collection<ProposalResponse> res;
 		try {

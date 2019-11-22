@@ -9,4 +9,5 @@ public interface ISalesService {
 	List<Sales> findSalesAll();
 	Sales findSales(Long no);
 	List<Sales> findUserSales(Long no);
+	void updateSales();
 }

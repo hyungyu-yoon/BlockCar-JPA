@@ -21,4 +21,5 @@ public interface ICarService {
 	public Record queryOwner(String carSerial);									// 차량 소유주 조회
 		
 	public String validCheckByCarNumber(String carNumber);
+	public void updateCar();
 }

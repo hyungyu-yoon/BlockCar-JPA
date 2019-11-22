@@ -42,6 +42,7 @@ public class CarService implements ICarService{
 	 */
 	@Override
 	public boolean registerCar(String carSerial, String carNumber, String info) {
+		System.out.println(carSerial + " / "+ carNumber);
 		Car car = new Car();
 		car.setCarSerial(carSerial);
 		car.setCarNumber(carNumber);
@@ -117,6 +118,11 @@ public class CarService implements ICarService{
 	@Override
 	public Record queryOwner(String carSerial) {
 		return managementService.queryOwner(carSerial);
+	}
+
+	@Override
+	public void updateCar() {
+		carRepository.flush();
 	}
 
 }

@@ -42,14 +42,15 @@ public class CarController {
 	/*
 	 * 1. 차량 생성 ( 시리얼 생성 및 차량 넘버/정보 등록 )
 	 */
-	@RequestMapping(value = "/car", method = RequestMethod.POST)
-	public boolean registerCar(@RequestParam String carNumber, @RequestParam String info) {
-		if(service.validCheckByCarNumber(carNumber).equals(null)) {
+	@RequestMapping(value = "/cars", method = RequestMethod.POST)
+	public boolean registerCar(@RequestBody Car car) {
+		System.out.println(car.getCarNumber() + " " + car.getInfo());
+		if(service.validCheckByCarNumber(car.getCarNumber()) == null) {
 			Random rd = new Random();
 			Date date = new Date();
 			SimpleDateFormat df = new SimpleDateFormat("yyyyMMddhhmmss");
 			String carSerial = df.format(date) + rd.nextInt(1000);
-			return service.registerCar(carSerial,carNumber,info);
+			return service.registerCar(carSerial,car.getCarNumber(),car.getInfo());
 		}else {
 			System.out.println("차량 넘버가 중복되었거나, 생성할 수 없습니다.");
 			return false;
@@ -57,11 +58,11 @@ public class CarController {
 	}
 	
 	// 사고 이력 등록
-	@PostMapping("/cars/{carNumber}/accident")
-	public ResponseEntity<Boolean> addAccident(@PathVariable String carNumber, @RequestParam String accident){
+	@PostMapping("/cars/accident")
+	public ResponseEntity<Boolean> addAccident(@RequestBody Record record){
 		try {
-			Car car = service.findByCarNumber(carNumber);
-			service.registerAccident(car.getCarSerial(), accident);
+			Car car = service.findByCarNumber(record.getCarNumber());
+			service.registerAccident(car.getCarSerial(), record.getCarData());
 			return new ResponseEntity<Boolean>(true,HttpStatus.OK);
 		} catch(Exception e) {
 			System.out.println(e);
@@ -70,11 +71,11 @@ public class CarController {
 		
 	}
 	// 정비 이력 등록
-	@PostMapping("/cars/{carNumber}/maintenance")
-	public ResponseEntity<Boolean> addMaintenance(@PathVariable String carNumber, @RequestParam String maintenance){
+	@PostMapping("/cars/maintenance")
+	public ResponseEntity<Boolean> addMaintenance(@RequestBody Record record){
 		try {
-			Car car = service.findByCarNumber(carNumber);
-			service.registerMaintenance(car.getCarSerial(), maintenance);
+			Car car = service.findByCarNumber(record.getCarNumber());
+			service.registerMaintenance(car.getCarSerial(), record.getCarData());
 			return new ResponseEntity<Boolean>(true,HttpStatus.OK);
 		} catch(Exception e) {
 			System.out.println(e);
@@ -82,11 +83,12 @@ public class CarController {
 		}
 	}
 	// 소유권 이전 등록
-	@PostMapping("/cars/{carNumber}/owner")
-	public ResponseEntity<Boolean> addOwner(@PathVariable String carNumber, @RequestParam String owner){
+	@PostMapping("/cars/owner")
+	public ResponseEntity<Boolean> addOwner(@RequestBody Record record){
 		try {
-			Car car = service.findByCarNumber(carNumber);
-			service.registerUpdatedOwner(car.getCarSerial(), owner);
+			Car car = service.findByCarNumber(record.getCarNumber());
+			System.out.println(car);
+			service.registerUpdatedOwner(car.getCarSerial(), record.getCarData());
 			return new ResponseEntity<Boolean>(true,HttpStatus.OK);
 		} catch(Exception e) {
 			System.out.println(e);
@@ -99,17 +101,31 @@ public class CarController {
 	// ( 정비 이력 조회 )
 	// ( 소유권 이전 조회 )
 	
-	@GetMapping("/cars/{carNumber}/history")
+	@GetMapping("/cars/history/{carNumber}")
 	public ResponseEntity<Car> getCarHistory(@PathVariable String carNumber){
 		
 		String serial = service.validCheckByCarNumber(carNumber);
 		if(serial.equals(null)) return null;
 		Car car = service.findByCarNumber(carNumber);
+		System.out.println(car.toString());
 		car.setAccident(service.getAccidentHistory(serial));
 		car.setMaintenance(service.getMaintenanceHistory(serial));
 		car.setOwner(service.getOwnerHistory(serial));
 		
 		return new ResponseEntity<Car>(car,HttpStatus.OK);
+	}
+	
+	@PutMapping("/cars")
+	public ResponseEntity<Car> updateCar(@RequestBody Car car){
+		Car info = service.findByCarNumber(car.getCarNumber());
+		info.setInfo(car.getInfo());
+		
+		try {
+			service.updateCar();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<Car>(info,HttpStatus.OK);
 	}
 	
 	// 차량 소유주 조회

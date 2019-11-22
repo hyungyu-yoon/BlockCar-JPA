@@ -2,9 +2,14 @@ package com.bollock.blockcar.car;
 
 public class Record {
 	private String carSerialNumber;
+	private String carNumber;
 	private String carData;
 	private String createdAt;
 	private String expiredAt;
+	public Record(String carNumber, String carData) {
+		this.carNumber = carNumber;
+		this.carData = carData;
+	}
 	public Record(String carSerialNumber, String carData, String createdAt, String expiredAt) {
 		super();
 		this.carSerialNumber = carSerialNumber;
@@ -38,6 +43,13 @@ public class Record {
 	}
 	public void setExpiredAt(String expiredAt) {
 		this.expiredAt = expiredAt;
+	}
+	
+	public String getCarNumber() {
+		return carNumber;
+	}
+	public void setCarNumber(String carNumber) {
+		this.carNumber = carNumber;
 	}
 	@Override
 	public String toString() {

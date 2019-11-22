@@ -12,5 +12,5 @@ public interface IPurchaseService {
 
 	Purchase findPurchase(Long no);
 	void updatePurchase();
-
+	List<Purchase> findUserPurchases(Long no);
 }

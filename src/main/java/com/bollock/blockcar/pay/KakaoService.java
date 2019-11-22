@@ -39,11 +39,11 @@ private static final String HOST = "https://kapi.kakao.com";
         params.add("quantity", "1");
         params.add("total_amount", info.getPrice()+"");
         params.add("tax_free_amount", "100");
-        params.add("approval_url", "http://192.168.31.143:8080/?#/buycar/success/");
+        params.add("approval_url", "http://13.124.63.128/?#/buycar/success/");
 //        params.add("cancel_url", "http://192.168.31.129:8080/kakao/kakaoPayCancel");
 //        params.add("fail_url", "http://192.168.31.129:8080/kakao/kakaoPaySuccessFail");
-        params.add("cancel_url", "http://13.125.230.141:8080/kakao/kakaoPayCancel");
-        params.add("fail_url", "http://13.125.230.141:8080/kakao/kakaoPaySuccessFail");
+        params.add("cancel_url", "http://13.124.63.128/kakao/kakaoPayCancel");
+        params.add("fail_url", "http://13.124.63.128/kakao/kakaoPaySuccessFail");
         
          HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<MultiValueMap<String, String>>(params, headers);
  

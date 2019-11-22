@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +20,7 @@ import com.bollock.blockcar.car.ICarService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api")
 @Api(value = "Post", description = "Post Controller")
@@ -32,6 +34,7 @@ public class PostController {
 	@ApiOperation(value = "판매 게시물 등록")
 	@PostMapping("/posts")
 	public ResponseEntity<Post> addPost(@RequestBody Post post){
+		post.setState("판매중");
 		Post postInfo = postService.insertPost(post);
 		
 		return new ResponseEntity<Post>(postInfo,HttpStatus.OK);
@@ -41,6 +44,10 @@ public class PostController {
 	@GetMapping("/posts")
 	public ResponseEntity<List<Post>> getPostsAll(){
 		List<Post> list = postService.findPostsAll();
+		for (int i = 0; i < list.size(); i++) {
+			Car car = service.findByCarNumber(list.get(i).getCarno());
+			list.get(i).setCar(car);
+		}
 		return new ResponseEntity<List<Post>>(list,HttpStatus.OK);
 	}
 	
@@ -65,7 +72,7 @@ public class PostController {
 	public ResponseEntity<Post> updateState(@RequestBody Post post){
 		Post postInfo = postService.findPost(post.getNo());
 		postInfo.setState(post.getState());
-		
+
 		postInfo = postService.updatePost(postInfo);
 		return new ResponseEntity<Post>(postInfo, HttpStatus.OK);
 	}
